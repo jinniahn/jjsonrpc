@@ -1,0 +1,73 @@
+#+TITLE: JSONRPC for calling python function
+#+DATE:  2020-08-28
+#+OPTIONS: ^:nil
+
+* FEATURES
+
+  - call python function by command line
+  - call python function by jsonrpc
+  - support elisp for emacs
+
+* INSTALL
+
+  you can install the package like below
+
+  #+begin_src sh :results output :exports both :compile
+  pip install git+https://github.com/jinniahn/jjsonrpc
+  #+end_src
+
+
+* USAGE
+
+** running server
+
+   #+begin_src sh :results output :exports both :compile
+
+   python3 -m jsonrpcserver --port 4000
+
+   #+end_src
+
+
+** call with curl 
+
+   #+begin_src sh :results output :exports both :compile
+   $ cat << EOF | curl -X POST -H "Content-Type: application/json" --data @- http://localhost:4000/
+   {
+     "jsonrpc": "2.0",
+     "method": "call_obj",
+     "params": [
+       {
+         "cwd": "~",
+         "module": "os",
+         "func": "getcwd",
+         "params": {
+         }
+       }
+     ],
+     "id": 1
+   }
+   EOF
+   #+end_src
+
+
+** call with sh
+
+   #+begin_example
+   echo '{"path": "/", "module":"os", "func":"getcwd", "cwd": "/" }' | python3 -m jjsonrpc.client -
+   #+end_example
+
+
+** emacs
+
+  #+begin_src emacs-lisp :tangle yes
+  ;; add library path
+  (add-to-list load-path (f-join (s-trim (shell-command-to-string "python3 -c \"import jjsonrpc;print(jjsonrpc.__path__._path[0])\"")) "elisp"))
+
+  ;; load library
+  (require 'jjsonrpc)
+
+  ;; call with specific server
+  (let ((jjsonrpc-server "localhost")
+        (jjsonrpc-port 4000))
+     (jjsonrpc-sync "random.randint" '(0 10)))
+  #+end_src
