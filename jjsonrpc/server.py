@@ -29,7 +29,7 @@ USAGE:
 
 from datetime import datetime
 from jsonrpc import JSONRPCResponseManager, dispatcher
-from .jsonrpcdummy import call_by_jsonrpc
+from .client import call_by_jsonrpc
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 import json

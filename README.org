@@ -71,3 +71,8 @@
         (jjsonrpc-port 4000))
      (jjsonrpc-sync "random.randint" '(0 10)))
   #+end_src
+
+
+* Author
+
+  jinsub ahn <jinniahn@gmail.com>
